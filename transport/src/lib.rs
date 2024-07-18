@@ -19,7 +19,7 @@
 //!
 //! ```no_run
 //! # #[cfg(feature = "rustls")]
-//! # use tonic::transport::{Channel, Certificate, ClientTlsConfig};
+//! # use transport::{Channel, Certificate, ClientTlsConfig};
 //! # use std::time::Duration;
 //! # use tonic::body::BoxBody;
 //! # use tonic::client::GrpcService;;
@@ -48,7 +48,7 @@
 //! ```no_run
 //! # use std::convert::Infallible;
 //! # #[cfg(feature = "rustls")]
-//! # use tonic::transport::{Server, Identity, ServerTlsConfig};
+//! # use transport::{Server, Identity, ServerTlsConfig};
 //! # use tonic::body::BoxBody;
 //! # use tower::Service;
 //! # #[cfg(feature = "rustls")]

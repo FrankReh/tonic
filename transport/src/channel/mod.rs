@@ -84,7 +84,7 @@ impl Channel {
     /// Create an [`Endpoint`] from a static string.
     ///
     /// ```
-    /// # use tonic::transport::Channel;
+    /// # use transport::Channel;
     /// Channel::from_static("https://example.com");
     /// ```
     pub fn from_static(s: &'static str) -> Endpoint {
@@ -95,7 +95,7 @@ impl Channel {
     /// Create an [`Endpoint`] from shared bytes.
     ///
     /// ```
-    /// # use tonic::transport::Channel;
+    /// # use transport::Channel;
     /// Channel::from_shared("https://example.com");
     /// ```
     pub fn from_shared(s: impl Into<Bytes>) -> Result<Endpoint, InvalidUri> {

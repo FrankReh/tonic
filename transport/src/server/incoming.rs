@@ -139,7 +139,8 @@ impl TcpIncoming {
     /// ```no_run
     /// # use tower_service::Service;
     /// # use http::{request::Request, response::Response};
-    /// # use tonic::{body::BoxBody, server::NamedService, transport::{Server, server::TcpIncoming}};
+    /// # use tonic::{body::BoxBody, server::NamedService};
+    /// # use transport::{Server, server::TcpIncoming};
     /// # use core::convert::Infallible;
     /// # use std::error::Error;
     /// # fn main() { }  // Cannot have type parameters, hence instead define:

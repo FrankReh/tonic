@@ -19,7 +19,8 @@ use tokio_rustls::server::TlsStream;
 /// The `ConnectInfo` returned will be accessible through [request extensions][ext]:
 ///
 /// ```
-/// use tonic::{Request, transport::server::Connected};
+/// use tonic::Request;
+/// use transport::server::Connected;
 ///
 /// // A `Stream` that yields connections
 /// struct MyConnector {}

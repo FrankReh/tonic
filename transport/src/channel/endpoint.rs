@@ -58,7 +58,7 @@ impl Endpoint {
     /// This function panics if the argument is an invalid URI.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// Endpoint::from_static("https://example.com");
     /// ```
     pub fn from_static(s: &'static str) -> Self {
@@ -69,7 +69,7 @@ impl Endpoint {
     /// Convert an `Endpoint` from shared bytes.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// Endpoint::from_shared("https://example.com".to_string());
     /// ```
     pub fn from_shared(s: impl Into<Bytes>) -> Result<Self, Error> {
@@ -83,7 +83,7 @@ impl Endpoint {
     /// It must be a value that can be converted into a valid  `http::HeaderValue` or building
     /// the endpoint will fail.
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.user_agent("Greeter").expect("Greeter should be a valid header value");
     /// // user-agent: "Greeter tonic/x.x.x"
@@ -108,7 +108,7 @@ impl Endpoint {
     /// It will play the role of SNI (Server Name Indication).
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # let mut builder = Endpoint::from_static("https://proxy.com");
     /// builder.origin("https://example.com".parse().expect("http://example.com must be a valid URI"));
     /// // origin: "https://example.com"
@@ -123,7 +123,7 @@ impl Endpoint {
     /// Apply a timeout to each request.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # use std::time::Duration;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.timeout(Duration::from_secs(5));
@@ -148,7 +148,7 @@ impl Endpoint {
     /// Defaults to no timeout.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # use std::time::Duration;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.connect_timeout(Duration::from_secs(5));
@@ -178,7 +178,7 @@ impl Endpoint {
     /// Apply a concurrency limit to each request.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.concurrency_limit(256);
     /// ```
@@ -192,7 +192,7 @@ impl Endpoint {
     /// Apply a rate limit to each request.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # use std::time::Duration;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.rate_limit(32, Duration::from_secs(1));
@@ -390,7 +390,7 @@ impl Endpoint {
     /// Get the endpoint uri.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # use http::Uri;
     /// let endpoint = Endpoint::from_static("https://example.com");
     ///

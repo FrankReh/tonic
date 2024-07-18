@@ -172,7 +172,7 @@ impl<L> Server<L> {
     /// # Example
     ///
     /// ```
-    /// # use tonic::transport::Server;
+    /// # use transport::Server;
     /// # use tower_service::Service;
     /// # let builder = Server::builder();
     /// builder.concurrency_limit_per_connection(32);
@@ -190,7 +190,7 @@ impl<L> Server<L> {
     /// # Example
     ///
     /// ```
-    /// # use tonic::transport::Server;
+    /// # use transport::Server;
     /// # use tower_service::Service;
     /// # use std::time::Duration;
     /// # let builder = Server::builder();
@@ -422,7 +422,7 @@ impl<L> Server<L> {
     /// # Example
     ///
     /// ```
-    /// # use tonic::transport::Server;
+    /// # use transport::Server;
     /// # use tower_service::Service;
     /// use tower::timeout::TimeoutLayer;
     /// use std::time::Duration;
@@ -438,7 +438,7 @@ impl<L> Server<L> {
     /// [interceptors]:
     ///
     /// ```
-    /// # use tonic::transport::Server;
+    /// # use transport::Server;
     /// # use tower_service::Service;
     /// use tower::ServiceBuilder;
     /// use std::time::Duration;
