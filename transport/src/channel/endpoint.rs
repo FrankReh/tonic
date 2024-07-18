@@ -4,7 +4,7 @@ use super::service::{self, Executor, SharedExec};
 use super::Channel;
 #[cfg(feature = "tls")]
 use super::ClientTlsConfig;
-use crate::Error;
+use crate::TransportError as Error;
 use bytes::Bytes;
 use http::{uri::Uri, HeaderValue};
 use hyper::rt;

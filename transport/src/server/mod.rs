@@ -33,7 +33,7 @@ pub use unix::UdsConnectInfo;
 pub use incoming::TcpIncoming;
 
 #[cfg(feature = "tls")]
-use crate::Error;
+use crate::TransportError as Error;
 
 use self::service::{RecoverError, ServerIo};
 use super::service::GrpcTimeout;
@@ -503,7 +503,7 @@ impl<L> Server<L> {
         svc: S,
         incoming: I,
         signal: Option<F>,
-    ) -> Result<(), super::Error>
+    ) -> Result<(), crate::TransportError>
     where
         L: Layer<S>,
         L::Service:
@@ -601,12 +601,12 @@ impl<L> Server<L> {
 
                     poll_fn(|cx| svc.poll_ready(cx))
                         .await
-                        .map_err(super::Error::from_source)?;
+                        .map_err(crate::TransportError::from_source)?;
 
                     let req_svc = svc
                         .call(&io)
                         .await
-                        .map_err(super::Error::from_source)?
+                        .map_err(crate::TransportError::from_source)?
                         .map_request(|req: Request<Incoming>| req.map(boxed));
 
                     let hyper_io = TokioIo::new(io);
@@ -728,7 +728,7 @@ impl<L> Router<L> {
     ///
     /// [`Server`]: struct.Server.html
     /// [tokio]: https://docs.rs/tokio
-    pub async fn serve<ResBody>(self, addr: SocketAddr) -> Result<(), super::Error>
+    pub async fn serve<ResBody>(self, addr: SocketAddr) -> Result<(), crate::TransportError>
     where
         L: Layer<Routes> + Clone,
         L::Service:
@@ -740,7 +740,7 @@ impl<L> Router<L> {
         ResBody::Error: Into<crate::Error>,
     {
         let incoming = TcpIncoming::new(addr, self.server.tcp_nodelay, self.server.tcp_keepalive)
-            .map_err(super::Error::from_source)?;
+            .map_err(crate::TransportError::from_source)?;
         self.server
             .serve_with_shutdown::<_, _, future::Ready<()>, _, _, ResBody>(
                 self.routes.prepare(),
@@ -760,7 +760,7 @@ impl<L> Router<L> {
         self,
         addr: SocketAddr,
         signal: F,
-    ) -> Result<(), super::Error>
+    ) -> Result<(), crate::TransportError>
     where
         L: Layer<Routes>,
         L::Service:
@@ -772,7 +772,7 @@ impl<L> Router<L> {
         ResBody::Error: Into<crate::Error>,
     {
         let incoming = TcpIncoming::new(addr, self.server.tcp_nodelay, self.server.tcp_keepalive)
-            .map_err(super::Error::from_source)?;
+            .map_err(crate::TransportError::from_source)?;
         self.server
             .serve_with_shutdown(self.routes.prepare(), incoming, Some(signal))
             .await
@@ -787,7 +787,7 @@ impl<L> Router<L> {
     pub async fn serve_with_incoming<I, IO, IE, ResBody>(
         self,
         incoming: I,
-    ) -> Result<(), super::Error>
+    ) -> Result<(), crate::TransportError>
     where
         I: Stream<Item = Result<IO, IE>>,
         IO: AsyncRead + AsyncWrite + Connected + Unpin + Send + 'static,
@@ -823,7 +823,7 @@ impl<L> Router<L> {
         self,
         incoming: I,
         signal: F,
-    ) -> Result<(), super::Error>
+    ) -> Result<(), crate::TransportError>
     where
         I: Stream<Item = Result<IO, IE>>,
         IO: AsyncRead + AsyncWrite + Connected + Unpin + Send + 'static,

@@ -162,7 +162,7 @@ impl Channel {
         Channel { svc }
     }
 
-    pub(crate) async fn connect<C>(connector: C, endpoint: Endpoint) -> Result<Self, super::Error>
+    pub(crate) async fn connect<C>(connector: C, endpoint: Endpoint) -> Result<Self, crate::TransportError>
     where
         C: Service<Uri> + Send + 'static,
         C::Error: Into<crate::Error> + Send,
@@ -174,7 +174,7 @@ impl Channel {
 
         let svc = Connection::connect(connector, endpoint)
             .await
-            .map_err(super::Error::from_source)?;
+            .map_err(crate::TransportError::from_source)?;
         let (svc, worker) = Buffer::pair(Either::A(svc), buffer_size);
         executor.execute(worker);
 
@@ -200,11 +200,11 @@ impl Channel {
 
 impl Service<http::Request<BoxBody>> for Channel {
     type Response = http::Response<BoxBody>;
-    type Error = super::Error;
+    type Error = crate::TransportError;
     type Future = ResponseFuture;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Service::poll_ready(&mut self.svc, cx).map_err(super::Error::from_source)
+        Service::poll_ready(&mut self.svc, cx).map_err(crate::TransportError::from_source)
     }
 
     fn call(&mut self, request: http::Request<BoxBody>) -> Self::Future {
@@ -215,10 +215,10 @@ impl Service<http::Request<BoxBody>> for Channel {
 }
 
 impl Future for ResponseFuture {
-    type Output = Result<Response<BoxBody>, super::Error>;
+    type Output = Result<Response<BoxBody>, crate::TransportError>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let val = ready!(Pin::new(&mut self.inner).poll(cx)).map_err(super::Error::from_source)?;
+        let val = ready!(Pin::new(&mut self.inner).poll(cx)).map_err(crate::TransportError::from_source)?;
         Ok(val).into()
     }
 }

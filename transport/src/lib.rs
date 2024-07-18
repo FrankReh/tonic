@@ -94,7 +94,10 @@ pub mod channel;
 #[cfg(feature = "server")]
 pub mod server;
 
-mod error;
+// Renamed the tonic/src/transport/error.rs to src/transport_error.rs here
+// as it is confusing enough that tonic defines its own private Error type.
+// That is duplicated below.
+mod transport_error;
 mod service;
 #[cfg(feature = "tls")]
 mod tls;
@@ -102,7 +105,9 @@ mod tls;
 #[doc(inline)]
 #[cfg(feature = "channel")]
 pub use self::channel::{Channel, Endpoint};
-pub use self::error::Error;
+// TODO Determine whether this external transport should define its own Error
+// or if it should be using the tonic::transport::Error.
+pub use self::transport_error::TransportError;
 #[doc(inline)]
 #[cfg(feature = "server")]
 pub use self::server::Server;

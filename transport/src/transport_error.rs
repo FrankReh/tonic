@@ -3,7 +3,7 @@ use std::{error::Error as StdError, fmt};
 type Source = Box<dyn StdError + Send + Sync + 'static>;
 
 /// Error's that originate from the client or server;
-pub struct Error {
+pub struct TransportError {
     inner: ErrorImpl,
 }
 
@@ -21,7 +21,7 @@ pub(crate) enum Kind {
     InvalidUserAgent,
 }
 
-impl Error {
+impl TransportError {
     pub(crate) fn new(kind: Kind) -> Self {
         Self {
             inner: ErrorImpl { kind, source: None },
@@ -34,17 +34,17 @@ impl Error {
     }
 
     pub(crate) fn from_source(source: impl Into<crate::Error>) -> Self {
-        Error::new(Kind::Transport).with(source)
+        TransportError::new(Kind::Transport).with(source)
     }
 
     #[cfg(feature = "channel")]
     pub(crate) fn new_invalid_uri() -> Self {
-        Error::new(Kind::InvalidUri)
+        TransportError::new(Kind::InvalidUri)
     }
 
     #[cfg(feature = "channel")]
     pub(crate) fn new_invalid_user_agent() -> Self {
-        Error::new(Kind::InvalidUserAgent)
+        TransportError::new(Kind::InvalidUserAgent)
     }
 
     fn description(&self) -> &str {
@@ -58,7 +58,7 @@ impl Error {
     }
 }
 
-impl fmt::Debug for Error {
+impl fmt::Debug for TransportError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut f = f.debug_tuple("tonic::transport::Error");
 
@@ -72,13 +72,13 @@ impl fmt::Debug for Error {
     }
 }
 
-impl fmt::Display for Error {
+impl fmt::Display for TransportError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(self.description())
     }
 }
 
-impl StdError for Error {
+impl StdError for TransportError {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         self.inner
             .source

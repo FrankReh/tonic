@@ -1,7 +1,7 @@
 use super::service::TlsConnector;
 use crate::{
     tls::{Certificate, Identity},
-    Error,
+    TransportError as Error,
 };
 use http::Uri;
 
