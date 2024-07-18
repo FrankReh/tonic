@@ -15,7 +15,7 @@ version = "0.12.1"
 
 [workspace]
 # This '[workspace]' added while this directory sits until the parent 'tonic' directory
-# which is defining a workspace. 
+# which is defining a workspace.
 
 [features]
 gzip = ["dep:flate2"]
@@ -25,6 +25,10 @@ zstd = ["dep:zstd"]
 # had been pulling in.
 # The features "server" and "channel" will most likely be considered requirements
 # so may be be removed as features altogether once this is compiling.
+#
+# Adding to the confusion, tonic has two modules,
+# at tonic/src/server and tonic/src/transport/server.
+# The second one uses a type from the first one.
 #
 # Removed the "post" and "codegen" features. Not relevant to the transport.
 default = ["server", "channel"]

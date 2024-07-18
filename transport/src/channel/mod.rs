@@ -10,7 +10,7 @@ pub use endpoint::Endpoint;
 pub use tls::ClientTlsConfig;
 
 use self::service::{Connection, DynamicServiceStream, Executor, SharedExec};
-use crate::body::BoxBody;
+use tonic::body::BoxBody;
 use bytes::Bytes;
 use http::{
     uri::{InvalidUri, Uri},

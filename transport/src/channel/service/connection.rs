@@ -1,7 +1,7 @@
 use super::{AddOrigin, Reconnect, SharedExec, UserAgent};
+use tonic::body::{boxed, BoxBody};
 use crate::{
-    body::{boxed, BoxBody},
-    transport::{channel::BoxFuture, service::GrpcTimeout, Endpoint},
+    channel::BoxFuture, service::GrpcTimeout, Endpoint,
 };
 use http::Uri;
 use hyper::rt;

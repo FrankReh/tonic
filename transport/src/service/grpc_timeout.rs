@@ -1,4 +1,4 @@
-use crate::metadata::GRPC_TIMEOUT_HEADER;
+use crate::GRPC_TIMEOUT_HEADER;
 use http::{HeaderMap, HeaderValue, Request};
 use pin_project::pin_project;
 use std::{

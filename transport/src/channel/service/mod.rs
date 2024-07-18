@@ -17,7 +17,14 @@ mod io;
 use self::io::BoxedIo;
 
 mod connector;
-pub(crate) use self::connector::{ConnectError, Connector};
+pub(crate) use self::connector::Connector;
+// TODO This next import is/was used in tonic to allow the tonic crate
+// to access this error type when the "channel" feature is enabled.
+// Question: what does this mean to an external transport that would want
+// the same treatment? Even if tonic is compiled with "channel", the error
+// type won't match the one created by this external transport.
+#[allow(unused_imports)]
+pub(crate) use self::connector::ConnectError;
 
 mod executor;
 pub(super) use self::executor::{Executor, SharedExec};

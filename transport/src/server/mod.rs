@@ -11,7 +11,7 @@ mod unix;
 use tokio_stream::StreamExt as _;
 use tracing::{debug, trace};
 
-use crate::service::Routes;
+use tonic::service::Routes;
 
 pub use conn::{Connected, TcpConnectInfo};
 use hyper_util::{
@@ -37,8 +37,8 @@ use crate::Error;
 
 use self::service::{RecoverError, ServerIo};
 use super::service::GrpcTimeout;
-use crate::body::{boxed, BoxBody};
-use crate::server::NamedService;
+use tonic::body::{boxed, BoxBody};
+use tonic::server::NamedService;
 use bytes::Bytes;
 use http::{Request, Response};
 use http_body_util::BodyExt;
@@ -61,11 +61,15 @@ use tower::{
     layer::util::{Identity, Stack},
     layer::Layer,
     limit::concurrency::ConcurrencyLimitLayer,
-    util::{BoxCloneService, Either},
+    // TODO remove util::{BoxCloneService, Either},
+    util::BoxCloneService,
     Service, ServiceBuilder, ServiceExt,
 };
+// TODO determine whether this is needed or not
+#[allow(unused_imports)]
+use tower::util::Either;
 
-type BoxHttpBody = crate::body::BoxBody;
+type BoxHttpBody = tonic::body::BoxBody;
 type BoxError = crate::Error;
 type BoxService = tower::util::BoxCloneService<Request<BoxBody>, Response<BoxBody>, crate::Error>;
 type TraceInterceptor = Arc<dyn Fn(&http::Request<()>) -> tracing::Span + Send + Sync + 'static>;
@@ -132,9 +136,15 @@ pub struct Router<L = Identity> {
     routes: Routes,
 }
 
+// TODO not clear whether this external transport library should
+// have its own impl for the tonic::server::NamedService for the tower Either.
+// For now, leaving it completelydisabled. We don't intent to implement our
+// own gRPC so want to rely on the tonic::server module.
+/*
 impl<S: NamedService, T> NamedService for Either<S, T> {
     const NAME: &'static str = S::NAME;
 }
+*/
 
 impl Server {
     /// Create a new server builder that can configure a [`Server`].
