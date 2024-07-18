@@ -7,7 +7,7 @@ use tokio_rustls::{
     TlsAcceptor as RustlsAcceptor,
 };
 
-use crate::transport::{
+use crate::{
     service::tls::{add_certs_from_pem, load_identity, ALPN_H2},
     Certificate, Identity,
 };

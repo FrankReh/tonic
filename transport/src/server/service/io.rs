@@ -1,4 +1,4 @@
-use crate::transport::server::Connected;
+use crate::server::Connected;
 use std::io;
 use std::io::IoSlice;
 use std::pin::Pin;

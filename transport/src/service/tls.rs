@@ -5,7 +5,7 @@ use tokio_rustls::rustls::{
     RootCertStore,
 };
 
-use crate::transport::Identity;
+use crate::Identity;
 
 /// h2 alpn in plain format for rustls.
 pub(crate) const ALPN_H2: &[u8] = b"h2";

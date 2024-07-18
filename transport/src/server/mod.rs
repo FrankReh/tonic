@@ -33,7 +33,7 @@ pub use unix::UdsConnectInfo;
 pub use incoming::TcpIncoming;
 
 #[cfg(feature = "tls")]
-use crate::transport::Error;
+use crate::Error;
 
 use self::service::{RecoverError, ServerIo};
 use super::service::GrpcTimeout;

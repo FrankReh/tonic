@@ -226,7 +226,7 @@ fn set_accepted_socket_options(stream: &TcpStream, nodelay: bool, keepalive: Opt
 
 #[cfg(test)]
 mod tests {
-    use crate::transport::server::TcpIncoming;
+    use crate::server::TcpIncoming;
     #[tokio::test]
     async fn one_tcpincoming_at_a_time() {
         let addr = "127.0.0.1:1322".parse().unwrap();
