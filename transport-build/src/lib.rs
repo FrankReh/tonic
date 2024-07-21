@@ -1,5 +1,5 @@
 //! `transport-build` compiles `proto` files via `prost` and generates service stubs
-//! and proto definitions for use with `tonic`.
+//! and proto definitions for use with `tonic` and `transport`.
 //!
 //! # Feature flags
 //!
@@ -13,8 +13,8 @@
 //!
 //! ```toml
 //! [dependencies]
-//! tonic = <tonic-version>
 //! prost = <prost-version>
+//! transport = <transport-version>
 //!
 //! [build-dependencies]
 //! transport-build = <transport-version>

@@ -8,8 +8,8 @@ Required dependencies
 
 ```toml
 [dependencies]
-tonic = "<tonic-version>"
 prost = "<prost-version>"
+transport = "<transport-version>"
 
 [build-dependencies]
 transport-build = "<transport-version>"

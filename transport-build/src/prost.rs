@@ -320,10 +320,15 @@ impl Builder {
         self
     }
 
-    /// Enable or disable generated clients and servers to have built-in tonic
+    /// Enable or disable generated clients and servers to have built-in transport
     /// transport features.
     ///
     /// When the `transport` feature is disabled this does nothing.
+    ///
+    /// TODO: decide what this flag means, even if it should exist here, given this build crate is
+    /// designed for the external `transport` crate. For now, leaving as is to get the examples
+    /// that were copied/modified for `transport/examples` to work with as few changes as necessary
+    /// in `transport-examples`.
     pub fn build_transport(mut self, enable: bool) -> Self {
         self.build_transport = enable;
         self
