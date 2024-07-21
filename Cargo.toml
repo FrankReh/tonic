@@ -26,5 +26,8 @@ members = [
   "tests/service_named_result",
   "tests/use_arc_self",
   "tests/default_stubs",
+  "transport",
+  "transport-build",
+  "transport-examples",
 ]
 resolver = "2"
