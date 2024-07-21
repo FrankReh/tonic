@@ -41,7 +41,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let http = Builder::new(TokioExecutor::new());
 
-    let listener = TcpListener::bind("[::1]:50051").await?;
+    let listener = TcpListener::bind("127.0.0.1:50051").await?;
     let tls_acceptor = TlsAcceptor::from(Arc::new(tls));
 
     loop {

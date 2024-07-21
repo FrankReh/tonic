@@ -84,7 +84,7 @@ $ cd routeguide
 Our first step is to define the gRPC *service* and the method *request* and *response* types using
 [protocol buffers]. We will keep our `.proto` files in a directory in our crate's root.
 Note that Tonic does not really care where our `.proto` definitions live. We will see how to use
-different [code generation configuration](#tonic-build) later in the tutorial.
+different [code generation configuration](#transport-build) later in the tutorial.
 
 ```shell
 $ mkdir proto && touch proto/route_guide.proto
@@ -185,14 +185,14 @@ serde_json = "1.0"
 rand = "0.8"
 
 [build-dependencies]
-tonic-build = "0.12"
+transport-build = "0.12"
 ```
 
 Create a `build.rs` file at the root of your crate:
 
 ```rust
 fn main() {
-    tonic_build::compile_protos("proto/route_guide.proto")
+    transport_build::compile_protos("proto/route_guide.proto")
         .unwrap_or_else(|e| panic!("Failed to compile protos {:?}", e));
 }
 ```
@@ -532,13 +532,13 @@ actually use our service. This is how our `main` function looks like:
 
 ```rust
 mod data;
-use tonic::transport::Server;
+use transport::Server;
 ```
 
 ```rust
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:10000".parse().unwrap();
+    let addr = "127.0.0.1:10000".parse().unwrap();
 
     let route_guide = RouteGuideService {
         features: Arc::new(data::load()),
@@ -602,7 +602,7 @@ use routeguide::{Point, Rectangle, RouteNote};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut client = RouteGuideClient::connect("http://[::1]:10000").await?;
+    let mut client = RouteGuideClient::connect("http://127.0.0.1:10000").await?;
 
      Ok(())
 }
@@ -645,7 +645,7 @@ Here's where we call the server-side streaming method `list_features`, which ret
 geographical `Feature`s.
 
 ```rust
-use tonic::transport::Channel;
+use transport::Channel;
 use std::error::Error;
 ```
 
@@ -789,8 +789,8 @@ $ cargo run --bin routeguide-client
 
 ## Appendix
 
-<a name="tonic-build"></a>
-### tonic_build configuration
+<a name="transport-build"></a>
+### transport_build configuration
 
 Tonic's default code generation configuration is convenient for self contained examples and small
 projects. However, there are some cases when we need a slightly different workflow. For example:
@@ -803,7 +803,7 @@ files in the default location.
 More generally, whenever we want to keep our `.proto` definitions in a central place and generate
 code for different crates or different languages, the default configuration is not enough.
 
-Luckily, `tonic_build` can be configured to fit whatever workflow we need. Here are just two
+Luckily, `transport_build` can be configured to fit whatever workflow we need. Here are just two
 possibilities:
 
 1)  We can keep our `.proto` definitions in a separate crate and generate our code on demand, as
@@ -813,7 +813,7 @@ opposed to at build time, placing the resulting modules wherever we need them.
 
 ```rust
 fn main() {
-    tonic_build::configure()
+    transport_build::configure()
         .build_client(false)
         .out_dir("another_crate/src/pb")
         .compile(&["path/my_proto.proto"], &["path"])

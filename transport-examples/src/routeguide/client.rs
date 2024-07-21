@@ -4,7 +4,7 @@ use std::time::Duration;
 use rand::rngs::ThreadRng;
 use rand::Rng;
 use tokio::time;
-use tonic::transport::Channel;
+use transport::Channel;
 use tonic::Request;
 
 use routeguide::route_guide_client::RouteGuideClient;
@@ -91,7 +91,7 @@ async fn run_route_chat(client: &mut RouteGuideClient<Channel>) -> Result<(), Bo
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut client = RouteGuideClient::connect("http://[::1]:10000").await?;
+    let mut client = RouteGuideClient::connect("http://127.0.0.1:10000").await?;
 
     println!("*** SIMPLE RPC ***");
     let response = client

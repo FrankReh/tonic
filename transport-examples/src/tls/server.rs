@@ -4,11 +4,11 @@ pub mod pb {
 
 use pb::{EchoRequest, EchoResponse};
 use tonic::{
-    transport::{
-        server::{TcpConnectInfo, TlsConnectInfo},
-        Identity, Server, ServerTlsConfig,
-    },
     Request, Response, Status,
+};
+use transport::{
+    server::{TcpConnectInfo, TlsConnectInfo},
+    Identity, Server, ServerTlsConfig,
 };
 
 type EchoResult<T> = Result<Response<T>, Status>;
@@ -42,7 +42,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let identity = Identity::from_pem(cert, key);
 
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
     let server = EchoServer::default();
 
     Server::builder()

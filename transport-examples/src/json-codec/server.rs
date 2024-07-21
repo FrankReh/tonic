@@ -4,7 +4,8 @@
 //! in the `examples/build.rs` file. As defined there, the generated code assumes that a module
 //! `crate::common` exists which defines `HelloRequest`, `HelloResponse`, and `JsonCodec`.
 
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status};
+use transport::Server;
 
 pub mod common;
 use common::{HelloRequest, HelloResponse};
@@ -34,7 +35,7 @@ impl Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
     let greeter = MyGreeter::default();
 
     println!("GreeterServer listening on {}", addr);

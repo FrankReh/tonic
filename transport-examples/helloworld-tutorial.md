@@ -117,10 +117,10 @@ prost = "0.13"
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
 
 [build-dependencies]
-tonic-build = "0.12"
+transport-build = "0.12"
 ```
 
-We include `tonic-build` as a useful way to incorporate the generation of our client and server gRPC code into the build process of our application. We will setup this build process now:
+We include `transport-build` as a useful way to incorporate the generation of our client and server gRPC code into the build process of our application. We will setup this build process now:
 
 ## Generating Server and Client code
 
@@ -128,21 +128,22 @@ At the root of your project (not /src), create a `build.rs` file and add the fol
 
 ```rust
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tonic_build::compile_protos("proto/helloworld.proto")?;
+    transport_build::compile_protos("proto/helloworld.proto")?;
     Ok(())
 }
 ```
 
-This tells `tonic-build` to compile your protobufs when you build your Rust project. While you can configure this build process in a number of ways, we will not get into the details in this introductory tutorial. Please see the [tonic-build] documentation for details on configuration.
+This tells `transport-build` to compile your protobufs when you build your Rust project. While you can configure this build process in a number of ways, we will not get into the details in this introductory tutorial. Please see the [transport-build] documentation for details on configuration.
 
-[tonic-build]: https://github.com/hyperium/tonic/blob/master/tonic-build/README.md
+[transport-build]: https://github.com/hyperium/tonic/blob/master/transport-build/README.md
 
 ## Writing our Server
 
 Now that the build process is written and our dependencies are all setup, we can begin writing the fun stuff! We need to import the things we will be using in our server, including the protobuf. Start by making a file called `server.rs` in your `/src` directory and writing the following code:
 
 ```rust
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status};
+use transport::Server;
 
 use hello_world::greeter_server::{Greeter, GreeterServer};
 use hello_world::{HelloReply, HelloRequest};
@@ -180,7 +181,7 @@ Finally, let's define the Tokio runtime that our server will actually run on. Th
 ```rust
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse()?;
+    let addr = "127.0.0.1:50051".parse()?;
     let greeter = MyGreeter::default();
 
     Server::builder()
@@ -225,7 +226,7 @@ impl Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse()?;
+    let addr = "127.0.0.1:50051".parse()?;
     let greeter = MyGreeter::default();
 
     Server::builder()
@@ -243,7 +244,7 @@ If you have a gRPC GUI client such as [Bloom RPC] you should be able to send req
 
 Or if you use [grpcurl] then you can simply try send requests like this:
 ```
-$ grpcurl -plaintext -import-path ./proto -proto helloworld.proto -d '{"name": "Tonic"}' '[::1]:50051' helloworld.Greeter/SayHello
+$ grpcurl -plaintext -import-path ./proto -proto helloworld.proto -d '{"name": "Tonic"}' '127.0.0.1:50051' helloworld.Greeter/SayHello
 ```
 And receiving responses like this:
 ```
@@ -273,7 +274,7 @@ The client is much simpler than the server as we don't need to implement any ser
 ```rust
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut client = GreeterClient::connect("http://[::1]:50051").await?;
+    let mut client = GreeterClient::connect("http://127.0.0.1:50051").await?;
 
     let request = tonic::Request::new(HelloRequest {
         name: "Tonic".into(),
@@ -299,7 +300,7 @@ pub mod hello_world {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut client = GreeterClient::connect("http://[::1]:50051").await?;
+    let mut client = GreeterClient::connect("http://127.0.0.1:50051").await?;
 
     let request = tonic::Request::new(HelloRequest {
         name: "Tonic".into(),

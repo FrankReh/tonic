@@ -1,22 +1,22 @@
 use std::{env, path::PathBuf};
 
 fn main() {
-    tonic_build::configure()
+    transport_build::configure()
         .type_attribute("routeguide.Point", "#[derive(Hash)]")
         .compile(&["proto/routeguide/route_guide.proto"], &["proto"])
         .unwrap();
 
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
-    tonic_build::configure()
+    transport_build::configure()
         .file_descriptor_set_path(out_dir.join("helloworld_descriptor.bin"))
         .compile(&["proto/helloworld/helloworld.proto"], &["proto"])
         .unwrap();
 
-    tonic_build::compile_protos("proto/echo/echo.proto").unwrap();
+    transport_build::compile_protos("proto/echo/echo.proto").unwrap();
 
-    tonic_build::compile_protos("proto/unaryecho/echo.proto").unwrap();
+    transport_build::compile_protos("proto/unaryecho/echo.proto").unwrap();
 
-    tonic_build::configure()
+    transport_build::configure()
         .server_mod_attribute("attrs", "#[cfg(feature = \"server\")]")
         .server_attribute("Echo", "#[derive(PartialEq)]")
         .client_mod_attribute("attrs", "#[cfg(feature = \"client\")]")
@@ -24,7 +24,7 @@ fn main() {
         .compile(&["proto/attrs/attrs.proto"], &["proto"])
         .unwrap();
 
-    tonic_build::configure()
+    transport_build::configure()
         .build_server(false)
         .compile(
             &["proto/googleapis/google/pubsub/v1/pubsub.proto"],
@@ -36,7 +36,7 @@ fn main() {
 
     let smallbuff_copy = out_dir.join("smallbuf");
     let _ = std::fs::create_dir(smallbuff_copy.clone()); // This will panic below if the directory failed to create
-    tonic_build::configure()
+    transport_build::configure()
         .out_dir(smallbuff_copy)
         .codec_path("crate::common::SmallBufferCodec")
         .compile(&["proto/helloworld/helloworld.proto"], &["proto"])
@@ -50,11 +50,11 @@ fn main() {
 //
 // See the client/server examples defined in `src/json-codec` for more information.
 fn build_json_codec_service() {
-    let greeter_service = tonic_build::manual::Service::builder()
+    let greeter_service = transport_build::manual::Service::builder()
         .name("Greeter")
         .package("json.helloworld")
         .method(
-            tonic_build::manual::Method::builder()
+            transport_build::manual::Method::builder()
                 .name("say_hello")
                 .route_name("SayHello")
                 .input_type("crate::common::HelloRequest")
@@ -64,5 +64,5 @@ fn build_json_codec_service() {
         )
         .build();
 
-    tonic_build::manual::Builder::new().compile(&[greeter_service]);
+    transport_build::manual::Builder::new().compile(&[greeter_service]);
 }

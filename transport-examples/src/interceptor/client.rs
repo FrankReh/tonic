@@ -3,9 +3,9 @@ use hello_world::HelloRequest;
 use tonic::{
     codegen::InterceptedService,
     service::Interceptor,
-    transport::{Channel, Endpoint},
     Request, Status,
 };
+use transport::{Channel, Endpoint};
 
 pub mod hello_world {
     tonic::include_proto!("helloworld");
@@ -13,7 +13,7 @@ pub mod hello_world {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let channel = Endpoint::from_static("http://[::1]:50051")
+    let channel = Endpoint::from_static("http://127.0.0.1:50051")
         .connect()
         .await?;
 
@@ -50,7 +50,7 @@ impl Interceptor for MyInterceptor {
 
 #[allow(dead_code, unused_variables)]
 async fn using_named_interceptor() -> Result<(), Box<dyn std::error::Error>> {
-    let channel = Endpoint::from_static("http://[::1]:50051")
+    let channel = Endpoint::from_static("http://127.0.0.1:50051")
         .connect()
         .await?;
 
@@ -64,7 +64,7 @@ async fn using_named_interceptor() -> Result<(), Box<dyn std::error::Error>> {
 // bare function that doesn't capture any variables
 #[allow(dead_code, unused_variables, clippy::type_complexity)]
 async fn using_function_pointer_interceptro() -> Result<(), Box<dyn std::error::Error>> {
-    let channel = Endpoint::from_static("http://[::1]:50051")
+    let channel = Endpoint::from_static("http://127.0.0.1:50051")
         .connect()
         .await?;
 

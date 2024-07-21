@@ -3,7 +3,8 @@ pub mod pb {
 }
 
 use pb::{EchoRequest, EchoResponse};
-use tonic::{metadata::MetadataValue, transport::Server, Request, Response, Status};
+use tonic::{metadata::MetadataValue, Request, Response, Status};
+use transport::Server;
 
 type EchoResult<T> = Result<Response<T>, Status>;
 
@@ -20,7 +21,7 @@ impl pb::echo_server::Echo for EchoServer {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
     let server = EchoServer::default();
 
     let svc = pb::echo_server::EchoServer::with_interceptor(server, check_auth);

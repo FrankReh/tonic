@@ -3,7 +3,7 @@ pub mod pb {
 }
 
 use pb::{EchoRequest, EchoResponse};
-use tonic::transport::{Certificate, Identity, Server, ServerTlsConfig};
+use transport::{Certificate, Identity, Server, ServerTlsConfig};
 use tonic::{Request, Response, Status};
 
 type EchoResult<T> = Result<Response<T>, Status>;
@@ -35,7 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client_ca_cert = std::fs::read_to_string(data_dir.join("tls/client_ca.pem"))?;
     let client_ca_cert = Certificate::from_pem(client_ca_cert);
 
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
     let server = EchoServer::default();
 
     let tls = ServerTlsConfig::new()
