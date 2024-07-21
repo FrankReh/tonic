@@ -1,4 +1,4 @@
-# tonic-build
+# transport-build
 
 Compiles proto files via prost and generates service stubs and proto definitions for use with tonic.
 
@@ -12,7 +12,7 @@ tonic = "<tonic-version>"
 prost = "<prost-version>"
 
 [build-dependencies]
-tonic-build = "<tonic-version>"
+transport-build = "<transport-version>"
 ```
 
 ## Examples
@@ -22,7 +22,7 @@ tonic-build = "<tonic-version>"
 In `build.rs`:
 ```rust
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tonic_build::compile_protos("proto/service.proto")?;
+    transport_build::compile_protos("proto/service.proto")?;
     Ok(())
 }
 ```
@@ -31,7 +31,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ```rust
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-   tonic_build::configure()
+   transport_build::configure()
         .build_server(false)
         .compile(
             &["proto/helloworld/helloworld.proto"],
@@ -71,7 +71,7 @@ And a bunch of Google proto files in structure will be like this:
 Then we can generate Rust code via this setup in our `build.rs`
 ```rust
 fn main() {
-    tonic_build::configure()
+    transport_build::configure()
         .build_server(false)
         //.out_dir("src/google")  // you can change the generated code's location
         .compile(

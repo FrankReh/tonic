@@ -6,11 +6,11 @@
 //!
 //! ```rust,no_run
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!     let greeter_service = tonic_build::manual::Service::builder()
+//!     let greeter_service = transport_build::manual::Service::builder()
 //!         .name("Greeter")
 //!         .package("helloworld")
 //!         .method(
-//!             tonic_build::manual::Method::builder()
+//!             transport_build::manual::Method::builder()
 //!                 .name("say_hello")
 //!                 .route_name("SayHello")
 //!                 // Provide the path to the Request type
@@ -23,7 +23,7 @@
 //!         )
 //!         .build();
 //!
-//!     tonic_build::manual::Builder::new().compile(&[greeter_service]);
+//!     transport_build::manual::Builder::new().compile(&[greeter_service]);
 //!     Ok(())
 //! }
 //! ```
@@ -45,7 +45,7 @@ use std::{
 /// # Example
 ///
 /// ```
-/// # use tonic_build::manual::Service;
+/// # use transport_build::manual::Service;
 /// let greeter_service = Service::builder()
 ///     .name("Greeter")
 ///     .package("helloworld")
@@ -234,7 +234,7 @@ impl crate::Method for Method {
 /// # Example
 ///
 /// ```
-/// # use tonic_build::manual::Method;
+/// # use transport_build::manual::Method;
 /// let say_hello_method = Method::builder()
 ///     .name("say_hello")
 ///     .route_name("SayHello")

@@ -11,7 +11,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-/// Configure `tonic-build` code generation.
+/// Configure `transport-build` code generation.
 ///
 /// Use [`compile_protos`] instead if you don't need to tweak anything.
 pub fn configure() -> Builder {
@@ -75,7 +75,7 @@ impl TonicBuildService {
     fn new(prost_service: Service, settings: CompileSettings) -> Self {
         Self {
             // CompileSettings are currently only consumed method-by-method but if you need them in the Service, here's your spot.
-            // The tonic_build::Service trait specifies that methods are borrowed, so they have to reified up front.
+            // The transport_build::Service trait specifies that methods are borrowed, so they have to reified up front.
             methods: prost_service
                 .methods
                 .iter()
