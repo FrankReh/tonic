@@ -10,7 +10,7 @@ pub use endpoint::Endpoint;
 pub use tls::ClientTlsConfig;
 
 use self::service::{Connection, DynamicServiceStream, Executor, SharedExec};
-use crate::body::BoxBody;
+use tonic::body::BoxBody;
 use bytes::Bytes;
 use http::{
     uri::{InvalidUri, Uri},
@@ -36,7 +36,7 @@ use tower::{
 };
 
 type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
-type Svc = Either<Connection, BoxService<Request<BoxBody>, Response<BoxBody>, crate::Error>>;
+type Svc = Either<Connection, BoxService<Request<BoxBody>, Response<BoxBody>, crate::BoxError>>;
 
 const DEFAULT_BUFFER_SIZE: usize = 1024;
 
@@ -84,7 +84,7 @@ impl Channel {
     /// Create an [`Endpoint`] from a static string.
     ///
     /// ```
-    /// # use tonic::transport::Channel;
+    /// # use transport::Channel;
     /// Channel::from_static("https://example.com");
     /// ```
     pub fn from_static(s: &'static str) -> Endpoint {
@@ -95,7 +95,7 @@ impl Channel {
     /// Create an [`Endpoint`] from shared bytes.
     ///
     /// ```
-    /// # use tonic::transport::Channel;
+    /// # use transport::Channel;
     /// Channel::from_shared("https://example.com");
     /// ```
     pub fn from_shared(s: impl Into<Bytes>) -> Result<Endpoint, InvalidUri> {
@@ -148,7 +148,7 @@ impl Channel {
     pub(crate) fn new<C>(connector: C, endpoint: Endpoint) -> Self
     where
         C: Service<Uri> + Send + 'static,
-        C::Error: Into<crate::Error> + Send,
+        C::Error: Into<crate::BoxError> + Send,
         C::Future: Unpin + Send,
         C::Response: rt::Read + rt::Write + HyperConnection + Unpin + Send + 'static,
     {
@@ -165,7 +165,7 @@ impl Channel {
     pub(crate) async fn connect<C>(connector: C, endpoint: Endpoint) -> Result<Self, super::Error>
     where
         C: Service<Uri> + Send + 'static,
-        C::Error: Into<crate::Error> + Send,
+        C::Error: Into<crate::BoxError> + Send,
         C::Future: Unpin + Send,
         C::Response: rt::Read + rt::Write + HyperConnection + Unpin + Send + 'static,
     {
@@ -184,7 +184,7 @@ impl Channel {
     pub(crate) fn balance<D, E>(discover: D, buffer_size: usize, executor: E) -> Self
     where
         D: Discover<Service = Connection> + Unpin + Send + 'static,
-        D::Error: Into<crate::Error>,
+        D::Error: Into<crate::BoxError>,
         D::Key: Hash + Send + Clone,
         E: Executor<BoxFuture<'static, ()>> + Send + Sync + 'static,
     {

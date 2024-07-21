@@ -4,7 +4,7 @@ use super::service::{self, Executor, SharedExec};
 use super::Channel;
 #[cfg(feature = "tls")]
 use super::ClientTlsConfig;
-use crate::transport::Error;
+use crate::Error;
 use bytes::Bytes;
 use http::{uri::Uri, HeaderValue};
 use hyper::rt;
@@ -45,7 +45,7 @@ impl Endpoint {
     pub fn new<D>(dst: D) -> Result<Self, Error>
     where
         D: TryInto<Self>,
-        D::Error: Into<crate::Error>,
+        D::Error: Into<crate::BoxError>,
     {
         let me = dst.try_into().map_err(|e| Error::from_source(e.into()))?;
         Ok(me)
@@ -58,7 +58,7 @@ impl Endpoint {
     /// This function panics if the argument is an invalid URI.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// Endpoint::from_static("https://example.com");
     /// ```
     pub fn from_static(s: &'static str) -> Self {
@@ -69,7 +69,7 @@ impl Endpoint {
     /// Convert an `Endpoint` from shared bytes.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// Endpoint::from_shared("https://example.com".to_string());
     /// ```
     pub fn from_shared(s: impl Into<Bytes>) -> Result<Self, Error> {
@@ -83,7 +83,7 @@ impl Endpoint {
     /// It must be a value that can be converted into a valid  `http::HeaderValue` or building
     /// the endpoint will fail.
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.user_agent("Greeter").expect("Greeter should be a valid header value");
     /// // user-agent: "Greeter tonic/x.x.x"
@@ -108,7 +108,7 @@ impl Endpoint {
     /// It will play the role of SNI (Server Name Indication).
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # let mut builder = Endpoint::from_static("https://proxy.com");
     /// builder.origin("https://example.com".parse().expect("http://example.com must be a valid URI"));
     /// // origin: "https://example.com"
@@ -123,7 +123,7 @@ impl Endpoint {
     /// Apply a timeout to each request.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # use std::time::Duration;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.timeout(Duration::from_secs(5));
@@ -135,7 +135,7 @@ impl Endpoint {
     /// the request, meaning the server will not be informed of this timeout,
     /// for that use [`Request::set_timeout`].
     ///
-    /// [`Request::set_timeout`]: crate::Request::set_timeout
+    /// [`Request::set_timeout`]: tonic::Request::set_timeout
     pub fn timeout(self, dur: Duration) -> Self {
         Endpoint {
             timeout: Some(dur),
@@ -148,7 +148,7 @@ impl Endpoint {
     /// Defaults to no timeout.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # use std::time::Duration;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.connect_timeout(Duration::from_secs(5));
@@ -178,7 +178,7 @@ impl Endpoint {
     /// Apply a concurrency limit to each request.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.concurrency_limit(256);
     /// ```
@@ -192,7 +192,7 @@ impl Endpoint {
     /// Apply a rate limit to each request.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # use std::time::Duration;
     /// # let mut builder = Endpoint::from_static("https://example.com");
     /// builder.rate_limit(32, Duration::from_secs(1));
@@ -350,7 +350,7 @@ impl Endpoint {
         C: Service<Uri> + Send + 'static,
         C::Response: rt::Read + rt::Write + Send + Unpin + 'static,
         C::Future: Send + 'static,
-        crate::Error: From<C::Error> + Send + 'static,
+        crate::BoxError: From<C::Error> + Send + 'static,
     {
         let connector = self.connector(connector);
 
@@ -375,7 +375,7 @@ impl Endpoint {
         C: Service<Uri> + Send + 'static,
         C::Response: rt::Read + rt::Write + Send + Unpin + 'static,
         C::Future: Send + 'static,
-        crate::Error: From<C::Error> + Send + 'static,
+        crate::BoxError: From<C::Error> + Send + 'static,
     {
         let connector = self.connector(connector);
         if let Some(connect_timeout) = self.connect_timeout {
@@ -390,7 +390,7 @@ impl Endpoint {
     /// Get the endpoint uri.
     ///
     /// ```
-    /// # use tonic::transport::Endpoint;
+    /// # use transport::Endpoint;
     /// # use http::Uri;
     /// let endpoint = Endpoint::from_static("https://example.com");
     ///

@@ -1,4 +1,4 @@
-use crate::transport::channel::BoxFuture;
+use crate::channel::BoxFuture;
 use http::uri::Authority;
 use http::uri::Scheme;
 use http::{Request, Uri};
@@ -30,10 +30,10 @@ impl<T, ReqBody> Service<Request<ReqBody>> for AddOrigin<T>
 where
     T: Service<Request<ReqBody>>,
     T::Future: Send + 'static,
-    T::Error: Into<crate::Error>,
+    T::Error: Into<crate::BoxError>,
 {
     type Response = T::Response;
-    type Error = crate::Error;
+    type Error = crate::BoxError;
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
@@ -42,7 +42,7 @@ where
 
     fn call(&mut self, req: Request<ReqBody>) -> Self::Future {
         if self.scheme.is_none() || self.authority.is_none() {
-            let err = crate::transport::Error::new_invalid_uri();
+            let err = crate::Error::new_invalid_uri();
             return Box::pin(async move { Err::<Self::Response, _>(err.into()) });
         }
 

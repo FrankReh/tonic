@@ -1,4 +1,4 @@
-use crate::metadata::GRPC_TIMEOUT_HEADER;
+use tonic::metadata::GRPC_TIMEOUT_HEADER;
 use http::{HeaderMap, HeaderValue, Request};
 use pin_project::pin_project;
 use std::{
@@ -29,10 +29,10 @@ impl<S> GrpcTimeout<S> {
 impl<S, ReqBody> Service<Request<ReqBody>> for GrpcTimeout<S>
 where
     S: Service<Request<ReqBody>>,
-    S::Error: Into<crate::Error>,
+    S::Error: Into<crate::BoxError>,
 {
     type Response = S::Response;
-    type Error = crate::Error;
+    type Error = crate::BoxError;
     type Future = ResponseFuture<S::Future>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
@@ -77,9 +77,9 @@ pub(crate) struct ResponseFuture<F> {
 impl<F, Res, E> Future for ResponseFuture<F>
 where
     F: Future<Output = Result<Res, E>>,
-    E: Into<crate::Error>,
+    E: Into<crate::BoxError>,
 {
-    type Output = Result<Res, crate::Error>;
+    type Output = Result<Res, crate::BoxError>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let this = self.project();
@@ -155,8 +155,8 @@ fn try_parse_grpc_timeout(
 /// Timeouts can be configured either with [`Endpoint::timeout`], [`Server::timeout`], or by
 /// setting the [`grpc-timeout` metadata value][spec].
 ///
-/// [`Endpoint::timeout`]: crate::transport::server::Server::timeout
-/// [`Server::timeout`]: crate::transport::channel::Endpoint::timeout
+/// [`Endpoint::timeout`]: crate::server::Server::timeout
+/// [`Server::timeout`]: crate::channel::Endpoint::timeout
 /// [spec]: https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md
 #[derive(Debug)]
 pub struct TimeoutExpired(());

@@ -47,7 +47,7 @@ use tokio_rustls::server::TlsStream;
 /// # }
 /// ```
 ///
-/// [ext]: crate::Request::extensions
+/// [ext]: tonic::Request::extensions
 pub trait Connected {
     /// The connection info type the IO resources generates.
     // all these bounds are necessary to set this as a request extension
@@ -64,7 +64,7 @@ pub trait Connected {
 ///
 /// See [`Connected`] for more details.
 ///
-/// [ext]: crate::Request::extensions
+/// [ext]: tonic::Request::extensions
 #[derive(Debug, Clone)]
 pub struct TcpConnectInfo {
     /// Returns the local address of this connection.
@@ -127,7 +127,7 @@ where
 ///
 /// See [`Connected`] for more details.
 ///
-/// [ext]: crate::Request::extensions
+/// [ext]: tonic::Request::extensions
 #[cfg(feature = "tls")]
 #[derive(Debug, Clone)]
 pub struct TlsConnectInfo<T> {
