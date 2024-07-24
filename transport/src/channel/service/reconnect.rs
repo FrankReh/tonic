@@ -1,4 +1,4 @@
-use crate::Error;
+use crate::BoxError;
 use pin_project::pin_project;
 use std::fmt;
 use std::{
@@ -18,7 +18,7 @@ where
     mk_service: M,
     state: State<M::Future, M::Response>,
     target: Target,
-    error: Option<crate::Error>,
+    error: Option<crate::BoxError>,
     has_been_connected: bool,
     is_lazy: bool,
 }
@@ -54,7 +54,7 @@ where
     M::Future: Unpin,
     Error: From<M::Error> + From<S::Error>,
     Target: Clone,
-    <M as tower_service::Service<Target>>::Error: Into<crate::Error>,
+    <M as tower_service::Service<Target>>::Error: Into<crate::BoxError>,
 {
     type Response = S::Response;
     type Error = Error;
@@ -183,7 +183,7 @@ pub(crate) struct ResponseFuture<F> {
 #[derive(Debug)]
 enum Inner<F> {
     Future(#[pin] F),
-    Error(Option<crate::Error>),
+    Error(Option<crate::BoxError>),
 }
 
 impl<F> ResponseFuture<F> {
@@ -193,7 +193,7 @@ impl<F> ResponseFuture<F> {
         }
     }
 
-    pub(crate) fn error(error: crate::Error) -> Self {
+    pub(crate) fn error(error: crate::BoxError) -> Self {
         ResponseFuture {
             inner: Inner::Error(Some(error)),
         }

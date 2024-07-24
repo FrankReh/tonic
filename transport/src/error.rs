@@ -33,7 +33,7 @@ impl Error {
         self
     }
 
-    pub(crate) fn from_source(source: impl Into<crate::Error>) -> Self {
+    pub(crate) fn from_source(source: impl Into<crate::BoxError>) -> Self {
         Error::new(Kind::Transport).with(source)
     }
 
@@ -60,7 +60,7 @@ impl Error {
 
 impl fmt::Debug for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let mut f = f.debug_tuple("tonic::transport::Error");
+        let mut f = f.debug_tuple("transport::Error");
 
         f.field(&self.inner.kind);
 

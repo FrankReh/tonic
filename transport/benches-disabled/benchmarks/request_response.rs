@@ -1,7 +1,7 @@
 use criterion::*;
 
-use crate::benchmarks::compiled_protos::helloworld::{HelloReply, HelloRequest};
-use crate::benchmarks::utils;
+use tonic::benchmarks::compiled_protos::helloworld::{HelloReply, HelloRequest};
+use tonic::benchmarks::utils;
 
 fn build_request(_name: String) {
     let _request = tonic::Request::new(HelloRequest { name: _name });

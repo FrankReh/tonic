@@ -18,14 +18,14 @@ pub mod client {
     pub struct GreeterClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl GreeterClient<tonic::transport::Channel> {
+    impl GreeterClient<transport::Channel> {
         #[doc = r" Attempt to create a new client by connecting to a given endpoint."]
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        pub async fn connect<D>(dst: D) -> Result<Self, transport::Error>
         where
-            D: TryInto<tonic::transport::Endpoint>,
+            D: TryInto<transport::Endpoint>,
             D::Error: Into<StdError>,
         {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            let conn = transport::Endpoint::new(dst)?.connect().await?;
             Ok(Self::new(conn))
         }
     }

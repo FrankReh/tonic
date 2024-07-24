@@ -1,4 +1,4 @@
-use crate::transport::server::Connected;
+use crate::server::Connected;
 use std::io;
 use std::io::IoSlice;
 use std::pin::Pin;
@@ -23,16 +23,16 @@ type ServerIoConnectInfo<IO> =
 type ServerIoConnectInfo<IO> = Either<<IO as Connected>::ConnectInfo, ()>;
 
 impl<IO> ServerIo<IO> {
-    pub(in crate::transport) fn new_io(io: IO) -> Self {
+    pub(crate) fn new_io(io: IO) -> Self {
         Self::Io(io)
     }
 
     #[cfg(feature = "tls")]
-    pub(in crate::transport) fn new_tls_io(io: TlsStream<IO>) -> Self {
+    pub(crate) fn new_tls_io(io: TlsStream<IO>) -> Self {
         Self::TlsIo(Box::new(io))
     }
 
-    pub(in crate::transport) fn connect_info(&self) -> ServerIoConnectInfo<IO>
+    pub(crate) fn connect_info(&self) -> ServerIoConnectInfo<IO>
     where
         IO: Connected,
     {

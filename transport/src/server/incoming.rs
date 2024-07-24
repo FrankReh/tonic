@@ -18,10 +18,10 @@ use tracing::warn;
 #[cfg(not(feature = "tls"))]
 pub(crate) fn tcp_incoming<IO, IE>(
     incoming: impl Stream<Item = Result<IO, IE>>,
-) -> impl Stream<Item = Result<ServerIo<IO>, crate::Error>>
+) -> impl Stream<Item = Result<ServerIo<IO>, crate::BoxError>>
 where
     IO: AsyncRead + AsyncWrite + Unpin + Send + 'static,
-    IE: Into<crate::Error>,
+    IE: Into<crate::BoxError>,
 {
     async_stream::try_stream! {
         let mut incoming = pin!(incoming);
@@ -36,10 +36,10 @@ where
 pub(crate) fn tcp_incoming<IO, IE>(
     incoming: impl Stream<Item = Result<IO, IE>>,
     tls: Option<TlsAcceptor>,
-) -> impl Stream<Item = Result<ServerIo<IO>, crate::Error>>
+) -> impl Stream<Item = Result<ServerIo<IO>, crate::BoxError>>
 where
     IO: AsyncRead + AsyncWrite + Unpin + Send + 'static,
-    IE: Into<crate::Error>,
+    IE: Into<crate::BoxError>,
 {
     async_stream::try_stream! {
         let mut incoming = pin!(incoming);
@@ -79,10 +79,10 @@ where
 #[cfg(feature = "tls")]
 async fn select<IO: 'static, IE>(
     incoming: &mut (impl Stream<Item = Result<IO, IE>> + Unpin),
-    tasks: &mut tokio::task::JoinSet<Result<ServerIo<IO>, crate::Error>>,
+    tasks: &mut tokio::task::JoinSet<Result<ServerIo<IO>, crate::BoxError>>,
 ) -> SelectOutput<IO>
 where
-    IE: Into<crate::Error>,
+    IE: Into<crate::BoxError>,
 {
     if tasks.is_empty() {
         return match incoming.try_next().await {
@@ -115,7 +115,7 @@ where
 enum SelectOutput<A> {
     Incoming(A),
     Io(ServerIo<A>),
-    Err(crate::Error),
+    Err(crate::BoxError),
     Done,
 }
 
@@ -166,7 +166,7 @@ impl TcpIncoming {
         addr: SocketAddr,
         nodelay: bool,
         keepalive: Option<Duration>,
-    ) -> Result<Self, crate::Error> {
+    ) -> Result<Self, crate::BoxError> {
         let std_listener = StdTcpListener::bind(addr)?;
         std_listener.set_nonblocking(true)?;
 
@@ -183,7 +183,7 @@ impl TcpIncoming {
         listener: TcpListener,
         nodelay: bool,
         keepalive: Option<Duration>,
-    ) -> Result<Self, crate::Error> {
+    ) -> Result<Self, crate::BoxError> {
         Ok(Self {
             inner: TcpListenerStream::new(listener),
             nodelay,
@@ -226,7 +226,7 @@ fn set_accepted_socket_options(stream: &TcpStream, nodelay: bool, keepalive: Opt
 
 #[cfg(test)]
 mod tests {
-    use crate::transport::server::TcpIncoming;
+    use crate::server::TcpIncoming;
     #[tokio::test]
     async fn one_tcpincoming_at_a_time() {
         let addr = "127.0.0.1:1322".parse().unwrap();

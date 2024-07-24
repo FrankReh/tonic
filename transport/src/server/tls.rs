@@ -1,7 +1,7 @@
 use std::fmt;
 
 use super::service::TlsAcceptor;
-use crate::transport::tls::{Certificate, Identity};
+use crate::tls::{Certificate, Identity};
 
 /// Configures TLS settings for servers.
 #[derive(Clone, Default)]
@@ -56,7 +56,7 @@ impl ServerTlsConfig {
         }
     }
 
-    pub(crate) fn tls_acceptor(&self) -> Result<TlsAcceptor, crate::Error> {
+    pub(crate) fn tls_acceptor(&self) -> Result<TlsAcceptor, crate::BoxError> {
         TlsAcceptor::new(
             self.identity.clone().unwrap(),
             self.client_ca_root.clone(),

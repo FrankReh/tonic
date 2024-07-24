@@ -1,7 +1,7 @@
 use super::BoxedIo;
 #[cfg(feature = "tls")]
 use super::TlsConnector;
-use crate::transport::channel::BoxFuture;
+use crate::channel::BoxFuture;
 use http::Uri;
 use std::fmt;
 use std::task::{Context, Poll};
@@ -15,7 +15,7 @@ use tower_service::Service;
 /// Wrapper type to indicate that an error occurs during the connection
 /// process, so that the appropriate gRPC Status can be inferred.
 #[derive(Debug)]
-pub(crate) struct ConnectError(pub(crate) crate::Error);
+pub(crate) struct ConnectError(pub(crate) crate::BoxError);
 
 impl fmt::Display for ConnectError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -50,7 +50,7 @@ where
     C: Service<Uri>,
     C::Response: rt::Read + rt::Write + Unpin + Send + 'static,
     C::Future: Send + 'static,
-    crate::Error: From<C::Error> + Send + 'static,
+    crate::BoxError: From<C::Error> + Send + 'static,
 {
     type Response = BoxedIo;
     type Error = ConnectError;
@@ -88,7 +88,7 @@ where
                     }
                 }
 
-                Ok::<_, crate::Error>(BoxedIo::new(io))
+                Ok::<_, crate::BoxError>(BoxedIo::new(io))
             }
             .await
             .map_err(ConnectError)

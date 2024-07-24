@@ -7,7 +7,7 @@ use tokio_rustls::{
     TlsAcceptor as RustlsAcceptor,
 };
 
-use crate::transport::{
+use crate::{
     service::tls::{add_certs_from_pem, load_identity, ALPN_H2},
     Certificate, Identity,
 };
@@ -22,7 +22,7 @@ impl TlsAcceptor {
         identity: Identity,
         client_ca_root: Option<Certificate>,
         client_auth_optional: bool,
-    ) -> Result<Self, crate::Error> {
+    ) -> Result<Self, crate::BoxError> {
         let builder = ServerConfig::builder();
 
         let builder = match client_ca_root {
@@ -49,7 +49,7 @@ impl TlsAcceptor {
         })
     }
 
-    pub(crate) async fn accept<IO>(&self, io: IO) -> Result<TlsStream<IO>, crate::Error>
+    pub(crate) async fn accept<IO>(&self, io: IO) -> Result<TlsStream<IO>, crate::BoxError>
     where
         IO: AsyncRead + AsyncWrite + Unpin,
     {

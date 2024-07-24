@@ -1,7 +1,7 @@
 use criterion::*;
 
-use crate::benchmarks::compiled_protos::diverse_types::{GoogleMessage1, GoogleMessage1SubMessage};
-use crate::benchmarks::utils;
+use tonic::benchmarks::compiled_protos::diverse_types::{GoogleMessage1, GoogleMessage1SubMessage};
+use tonic::benchmarks::utils;
 
 fn build_request(_name: String) {
     let sub_message = GoogleMessage1SubMessage {

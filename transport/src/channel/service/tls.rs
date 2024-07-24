@@ -10,8 +10,8 @@ use tokio_rustls::{
 };
 
 use super::io::BoxedIo;
-use crate::transport::service::tls::{add_certs_from_pem, load_identity, TlsError, ALPN_H2};
-use crate::transport::tls::{Certificate, Identity};
+use crate::service::tls::{add_certs_from_pem, load_identity, TlsError, ALPN_H2};
+use crate::tls::{Certificate, Identity};
 
 #[derive(Clone)]
 pub(crate) struct TlsConnector {
@@ -28,7 +28,7 @@ impl TlsConnector {
         assume_http2: bool,
         #[cfg(feature = "tls-roots")] with_native_roots: bool,
         #[cfg(feature = "tls-webpki-roots")] with_webpki_roots: bool,
-    ) -> Result<Self, crate::Error> {
+    ) -> Result<Self, crate::BoxError> {
         let builder = ClientConfig::builder();
         let mut roots = RootCertStore::empty();
 
@@ -63,7 +63,7 @@ impl TlsConnector {
         })
     }
 
-    pub(crate) async fn connect<I>(&self, io: I) -> Result<BoxedIo, crate::Error>
+    pub(crate) async fn connect<I>(&self, io: I) -> Result<BoxedIo, crate::BoxError>
     where
         I: AsyncRead + AsyncWrite + Send + Unpin + 'static,
     {
