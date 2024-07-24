@@ -295,12 +295,13 @@ default = ["full"]
 # Common dependencies
 tokio = { version = "1.0", features = ["rt-multi-thread", "macros"] }
 prost = "0.13"
-tonic = { path = "../tonic" }
+tonic = { version = "0.12.1", features = ["codegen", "prost", "gzip"] }
+transport = { path = "../transport", features = ["tls"] }
 # Optional dependencies
-tonic-web = { path = "../tonic-web", optional = true }
-tonic-health = { path = "../tonic-health", optional = true }
-tonic-reflection = { path = "../tonic-reflection", optional = true }
-tonic-types = { path = "../tonic-types", optional = true }
+tonic-web = { version = "0.12.1", optional = true }
+tonic-health = { version = "0.12.1", optional = true }
+tonic-reflection = { version = "0.12.1", optional = true }
+tonic-types = { version = "0.12.1", optional = true }
 async-stream = { version = "0.3", optional = true }
 tokio-stream = { version = "0.1", optional = true }
 tokio-util = { version = "0.7.8", optional = true }
