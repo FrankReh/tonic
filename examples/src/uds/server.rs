@@ -6,8 +6,9 @@ use tokio::net::UnixListener;
 #[cfg(unix)]
 use tokio_stream::wrappers::UnixListenerStream;
 #[cfg(unix)]
-use tonic::transport::server::UdsConnectInfo;
-use tonic::{transport::Server, Request, Response, Status};
+use transport::server::UdsConnectInfo;
+use tonic::{Request, Response, Status};
+use transport::Server;
 
 pub mod hello_world {
     tonic::include_proto!("helloworld");

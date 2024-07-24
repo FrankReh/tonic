@@ -4,7 +4,7 @@ pub mod pb {
 
 use std::time::Duration;
 use tokio_stream::{Stream, StreamExt};
-use tonic::transport::Channel;
+use transport::Channel;
 
 use pb::{echo_client::EchoClient, EchoRequest};
 
@@ -65,7 +65,7 @@ async fn bidirectional_streaming_echo_throttle(client: &mut EchoClient<Channel>,
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut client = EchoClient::connect("http://[::1]:50051").await.unwrap();
+    let mut client = EchoClient::connect("http://127.0.0.1:50051").await.unwrap();
 
     println!("Streaming echo:");
     streaming_echo(&mut client, 5).await;

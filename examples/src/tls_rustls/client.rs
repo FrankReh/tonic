@@ -29,7 +29,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     http.enforce_http(false);
 
     // We have to do some wrapping here to map the request type from
-    // `https://example.com` -> `https://[::1]:50051` because `rustls`
+    // `https://example.com` -> `https://127.0.0.1:50051` because `rustls`
     // doesn't accept ip's as `ServerName`.
     let connector = tower::ServiceBuilder::new()
         .layer_fn(move |s| {
@@ -44,7 +44,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Since our cert is signed with `example.com` but we actually want to connect
         // to a local server we will override the Uri passed from the `HttpsConnector`
         // and map it to the correct `Uri` that will connect us directly to the local server.
-        .map_request(|_| Uri::from_static("https://[::1]:50051"))
+        .map_request(|_| Uri::from_static("https://127.0.0.1:50051"))
         .service(http);
 
     let client = hyper_util::client::legacy::Client::builder(TokioExecutor::new()).build(connector);

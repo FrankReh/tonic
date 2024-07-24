@@ -1,8 +1,8 @@
 use hyper_util::rt::TokioIo;
 use tonic::{
-    transport::{Endpoint, Server, Uri},
     Request, Response, Status,
 };
+use transport::{Endpoint, Server, Uri};
 use tower::service_fn;
 
 pub mod hello_world {

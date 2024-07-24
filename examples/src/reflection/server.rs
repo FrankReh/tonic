@@ -1,4 +1,4 @@
-use tonic::transport::Server;
+use transport::Server;
 use tonic::{Request, Response, Status};
 
 mod proto {
@@ -33,7 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build()
         .unwrap();
 
-    let addr = "[::1]:50052".parse().unwrap();
+    let addr = "127.0.0.1:50052".parse().unwrap();
     let greeter = MyGreeter::default();
 
     Server::builder()

@@ -3,9 +3,9 @@ pub mod pb {
 }
 
 use pb::{echo_client::EchoClient, EchoRequest};
-use tonic::transport::Channel;
+use transport::Channel;
 
-use tonic::transport::Endpoint;
+use transport::Endpoint;
 
 use std::sync::Arc;
 
@@ -15,8 +15,8 @@ use tower::discover::Change;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let e1 = Endpoint::from_static("http://[::1]:50051");
-    let e2 = Endpoint::from_static("http://[::1]:50052");
+    let e1 = Endpoint::from_static("http://127.0.0.1:50051");
+    let e2 = Endpoint::from_static("http://127.0.0.1:50052");
 
     let (channel, rx) = Channel::balance_channel(10);
     let mut client = EchoClient::new(channel);
@@ -48,7 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
         println!("Added third endpoint");
-        let e3 = Endpoint::from_static("http://[::1]:50051");
+        let e3 = Endpoint::from_static("http://127.0.0.1:50051");
         let change = Change::Insert("3", e3);
         let res = rx.send(change).await;
         println!("{:?}", res);

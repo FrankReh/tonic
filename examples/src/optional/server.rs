@@ -1,5 +1,6 @@
 use std::env;
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status};
+use transport::Server;
 
 use hello_world::greeter_server::{Greeter, GreeterServer};
 use hello_world::{HelloReply, HelloRequest};
@@ -31,7 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     let enabled = args.get(1) == Some(&"enable".to_string());
 
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
     let greeter = MyGreeter::default();
 
     let optional_service = if enabled {

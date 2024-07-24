@@ -5,9 +5,9 @@ pub mod api {
 use api::{publisher_client::PublisherClient, ListTopicsRequest};
 use tonic::{
     metadata::MetadataValue,
-    transport::{Certificate, Channel, ClientTlsConfig},
     Request,
 };
+use transport::{Certificate, Channel, ClientTlsConfig};
 
 const ENDPOINT: &str = "https://pubsub.googleapis.com";
 

@@ -14,14 +14,14 @@ type Result<T, E = StdError> = ::std::result::Result<T, E>;
 // before the runtime. Not doing this will result in a deadlock when dropped.
 // Rust drops struct fields in declaration order.
 struct BlockingClient {
-    client: GreeterClient<tonic::transport::Channel>,
+    client: GreeterClient<transport::Channel>,
     rt: Runtime,
 }
 
 impl BlockingClient {
-    pub fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+    pub fn connect<D>(dst: D) -> Result<Self, transport::Error>
     where
-        D: TryInto<tonic::transport::Endpoint>,
+        D: TryInto<transport::Endpoint>,
         D::Error: Into<StdError>,
     {
         let rt = Builder::new_multi_thread().enable_all().build().unwrap();
@@ -39,7 +39,7 @@ impl BlockingClient {
 }
 
 fn main() -> Result<()> {
-    let mut client = BlockingClient::connect("http://[::1]:50051")?;
+    let mut client = BlockingClient::connect("http://127.0.0.1:50051")?;
 
     let request = tonic::Request::new(HelloRequest {
         name: "Tonic".into(),

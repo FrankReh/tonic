@@ -3,11 +3,11 @@ pub mod pb {
 }
 
 use pb::{echo_client::EchoClient, EchoRequest};
-use tonic::transport::Channel;
+use transport::Channel;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let endpoints = ["http://[::1]:50051", "http://[::1]:50052"]
+    let endpoints = ["http://127.0.0.1:50051", "http://127.0.0.1:50052"]
         .iter()
         .map(|a| Channel::from_static(a));
 

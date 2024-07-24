@@ -1,5 +1,6 @@
 use std::env;
-use tonic::{service::RoutesBuilder, transport::Server, Request, Response, Status};
+use tonic::{service::RoutesBuilder, Request, Response, Status};
+use transport::Server;
 
 use hello_world::greeter_server::{Greeter, GreeterServer};
 use hello_world::{HelloReply, HelloRequest};
@@ -75,7 +76,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     init_greeter(&args, &mut routes_builder);
     init_echo(&args, &mut routes_builder);
 
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
 
     println!("Grpc server listening on {}", addr);
 

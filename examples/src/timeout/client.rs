@@ -3,7 +3,7 @@ use hello_world::HelloRequest;
 use std::time::Duration;
 use tower::timeout::Timeout;
 
-use tonic::transport::Channel;
+use transport::Channel;
 
 pub mod hello_world {
     tonic::include_proto!("helloworld");
@@ -11,7 +11,7 @@ pub mod hello_world {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let channel = Channel::from_static("http://[::1]:50051").connect().await?;
+    let channel = Channel::from_static("http://127.0.0.1:50051").connect().await?;
     let timeout_channel = Timeout::new(channel, Duration::from_millis(1000));
 
     let mut client = GreeterClient::new(timeout_channel);

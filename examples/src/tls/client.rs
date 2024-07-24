@@ -3,7 +3,7 @@ pub mod pb {
 }
 
 use pb::{echo_client::EchoClient, EchoRequest};
-use tonic::transport::{Certificate, Channel, ClientTlsConfig};
+use transport::{Certificate, Channel, ClientTlsConfig};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .ca_certificate(ca)
         .domain_name("example.com");
 
-    let channel = Channel::from_static("https://[::1]:50051")
+    let channel = Channel::from_static("https://127.0.0.1:50051")
         .tls_config(tls)?
         .connect()
         .await?;

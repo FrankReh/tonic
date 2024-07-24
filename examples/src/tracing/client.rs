@@ -17,7 +17,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 #[tracing::instrument]
 async fn say_hi(name: String) -> Result<(), Box<dyn std::error::Error>> {
-    let mut client = GreeterClient::connect("http://[::1]:50051").await?;
+    let mut client = GreeterClient::connect("http://127.0.0.1:50051").await?;
 
     let request = tonic::Request::new(HelloRequest { name });
 

@@ -8,11 +8,11 @@ pub mod echo {
 
 use echo::{echo_client::EchoClient, EchoRequest};
 use hello_world::{greeter_client::GreeterClient, HelloRequest};
-use tonic::transport::Endpoint;
+use transport::Endpoint;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let channel = Endpoint::from_static("http://[::1]:50051")
+    let channel = Endpoint::from_static("http://127.0.0.1:50051")
         .connect()
         .await?;
 

@@ -1,4 +1,5 @@
-use tonic::{transport::Server, Code, Request, Response, Status};
+use tonic::{Code, Request, Response, Status};
+use transport::Server;
 use tonic_types::{ErrorDetails, StatusExt};
 
 use hello_world::greeter_server::{Greeter, GreeterServer};
@@ -57,7 +58,7 @@ impl Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
     let greeter = MyGreeter::default();
 
     println!("GreeterServer listening on {}", addr);

@@ -8,7 +8,7 @@ use hello_world::{greeter_client::GreeterClient, HelloRequest};
 use hyper_util::rt::TokioIo;
 #[cfg(unix)]
 use tokio::net::UnixStream;
-use tonic::transport::{Endpoint, Uri};
+use transport::{Endpoint, Uri};
 use tower::service_fn;
 
 #[cfg(unix)]

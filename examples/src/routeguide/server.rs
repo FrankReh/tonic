@@ -5,7 +5,7 @@ use std::time::Instant;
 
 use tokio::sync::mpsc;
 use tokio_stream::{wrappers::ReceiverStream, Stream, StreamExt};
-use tonic::transport::Server;
+use transport::Server;
 use tonic::{Request, Response, Status};
 
 use routeguide::route_guide_server::{RouteGuide, RouteGuideServer};
@@ -133,7 +133,7 @@ impl RouteGuide for RouteGuideService {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:10000".parse().unwrap();
+    let addr = "127.0.0.1:10000".parse().unwrap();
 
     println!("RouteGuideServer listening on: {}", addr);
 

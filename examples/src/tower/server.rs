@@ -3,7 +3,8 @@ use std::{
     task::{Context, Poll},
     time::Duration,
 };
-use tonic::{body::BoxBody, transport::Server, Request, Response, Status};
+use tonic::{body::BoxBody, Request, Response, Status};
+use transport::Server;
 use tower::{Layer, Service};
 
 use hello_world::greeter_server::{Greeter, GreeterServer};
@@ -33,7 +34,7 @@ impl Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
     let greeter = MyGreeter::default();
 
     println!("GreeterServer listening on {}", addr);

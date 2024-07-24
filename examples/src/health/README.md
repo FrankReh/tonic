@@ -8,7 +8,7 @@ For example, running the following bash script:
 
 ```bash
 while [ true ]; do
-./grpc_health_probe -addr=[::1]:50051 -service=helloworld.Greeter
+./grpc_health_probe -addr=127.0.0.1:50051 -service=helloworld.Greeter
 sleep 1
 done
 ```

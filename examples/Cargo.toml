@@ -326,4 +326,4 @@ tower-http = { version = "0.5", optional = true }
 pin-project = { version = "1.0.11", optional = true }
 
 [build-dependencies]
-tonic-build = { path = "../tonic-build", features = ["prost"] }
+transport-build = { path = "../transport-build", features = ["prost"] }

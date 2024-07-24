@@ -1,4 +1,5 @@
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status};
+use transport::Server;
 
 pub mod hello_world {
     tonic::include_proto!("helloworld");
@@ -20,7 +21,7 @@ use echo::{
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
 
     let greeter = GreeterServer::new(MyGreeter::default());
     let echo = EchoServer::new(MyEcho::default());

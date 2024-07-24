@@ -4,7 +4,8 @@ pub mod pb {
 
 use std::net::SocketAddr;
 use tokio::sync::mpsc;
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status};
+use transport::Server;
 
 use pb::{EchoRequest, EchoResponse};
 
@@ -26,7 +27,7 @@ impl pb::echo_server::Echo for EchoServer {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addrs = ["[::1]:50051", "[::1]:50052"];
+    let addrs = ["127.0.0.1:50051", "127.0.0.1:50052"];
 
     let (tx, mut rx) = mpsc::unbounded_channel();
 

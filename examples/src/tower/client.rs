@@ -3,7 +3,8 @@ use hello_world::HelloRequest;
 use service::AuthSvc;
 use tower::ServiceBuilder;
 
-use tonic::{transport::Channel, Request, Status};
+use tonic::{Request, Status};
+use transport::Channel;
 
 pub mod hello_world {
     tonic::include_proto!("helloworld");
@@ -11,7 +12,7 @@ pub mod hello_world {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let channel = Channel::from_static("http://[::1]:50051").connect().await?;
+    let channel = Channel::from_static("http://127.0.0.1:50051").connect().await?;
 
     let channel = ServiceBuilder::new()
         // Interceptors can be also be applied as middleware
@@ -44,7 +45,7 @@ mod service {
     use std::pin::Pin;
     use std::task::{Context, Poll};
     use tonic::body::BoxBody;
-    use tonic::transport::Channel;
+    use transport::Channel;
     use tower::Service;
 
     pub struct AuthSvc {

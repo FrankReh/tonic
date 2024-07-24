@@ -137,7 +137,7 @@ $ cargo run --bin tower-server
 
 ### Server
 ```bash
-systemfd --no-pid -s http::[::1]:50051 -- cargo watch -x 'run --bin autoreload-server'
+systemfd --no-pid -s http::127.0.0.1:50051 -- cargo watch -x 'run --bin autoreload-server'
 ```
 
 ### Notes:

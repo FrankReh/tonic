@@ -1,4 +1,5 @@
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status};
+use transport::Server;
 
 pub mod hello_world {
     tonic::include_proto!("helloworld");
@@ -37,7 +38,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_max_level(tracing::Level::DEBUG)
         .init();
 
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "127.0.0.1:50051".parse().unwrap();
     let greeter = MyGreeter::default();
 
     tracing::info!(message = "Starting server.", %addr);
