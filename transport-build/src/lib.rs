@@ -1,4 +1,4 @@
-//! `tonic-build` compiles `proto` files via `prost` and generates service stubs
+//! `transport-build` compiles `proto` files via `prost` and generates service stubs
 //! and proto definitions for use with `tonic`.
 //!
 //! # Feature flags
@@ -6,7 +6,7 @@
 //! - `cleanup-markdown`: Enables cleaning up documentation from the generated code. Useful
 //! when documentation of the generated code fails `cargo test --doc` for example.
 //! - `prost`: Enables usage of prost generator (enabled by default).
-//! - `transport`: Enables generation of `connect` method using `tonic::transport::Channel`
+//! - `transport`: Enables generation of `connect` method using `transport::Channel`
 //! (enabled by default).
 //!
 //! # Required dependencies
@@ -17,7 +17,7 @@
 //! prost = <prost-version>
 //!
 //! [build-dependencies]
-//! tonic-build = <tonic-version>
+//! transport-build = <tonic-version>
 //! ```
 //!
 //! # Examples
@@ -25,7 +25,7 @@
 //!
 //! ```rust,no_run
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!     tonic_build::compile_protos("proto/service.proto")?;
+//!     transport_build::compile_protos("proto/service.proto")?;
 //!     Ok(())
 //! }
 //! ```
@@ -34,7 +34,7 @@
 //!
 //! ```rust,no_run
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!    tonic_build::configure()
+//!    transport_build::configure()
 //!         .build_server(false)
 //!         .compile(
 //!             &["proto/helloworld/helloworld.proto"],
@@ -66,13 +66,7 @@
     rust_2018_idioms,
     unreachable_pub
 )]
-#![doc(
-    html_logo_url = "https://raw.githubusercontent.com/tokio-rs/website/master/public/img/icons/tonic.svg"
-)]
 #![deny(rustdoc::broken_intra_doc_links)]
-#![doc(html_root_url = "https://docs.rs/tonic-build/0.12.1")]
-#![doc(issue_tracker_base_url = "https://github.com/hyperium/tonic/issues/")]
-#![doc(test(no_crate_inject, attr(deny(rust_2018_idioms))))]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
 use proc_macro2::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream};
@@ -175,7 +169,7 @@ impl Attributes {
     /// # Examples
     ///
     /// ```
-    /// # use tonic_build::*;
+    /// # use transport_build::*;
     /// let mut attributes = Attributes::default();
     /// attributes.push_mod("my.proto.package", r#"#[cfg(feature = "server")]"#);
     /// ```
@@ -188,7 +182,7 @@ impl Attributes {
     /// # Examples
     ///
     /// ```
-    /// # use tonic_build::*;
+    /// # use transport_build::*;
     /// let mut attributes = Attributes::default();
     /// attributes.push_struct("EchoService", "#[derive(PartialEq)]");
     /// ```

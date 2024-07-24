@@ -4,12 +4,12 @@ categories = ["network-programming", "asynchronous"]
 description = """
 Codegen module of `tonic` gRPC implementation.
 """
-documentation = "https://docs.rs/tonic-build/0.12.1"
+documentation = "https://docs.rs/transport-build/0.12.1"
 edition = "2021"
 homepage = "https://github.com/hyperium/tonic"
 keywords = ["rpc", "grpc", "async", "codegen", "protobuf"]
 license = "MIT"
-name = "tonic-build"
+name = "transport-build"
 readme = "README.md"
 repository = "https://github.com/hyperium/tonic"
 version = "0.12.1"

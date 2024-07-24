@@ -138,14 +138,14 @@ pub(crate) fn generate_internal<T: Service>(
 #[cfg(feature = "transport")]
 fn generate_connect(service_ident: &syn::Ident, enabled: bool) -> TokenStream {
     let connect_impl = quote! {
-        impl #service_ident<tonic::transport::Channel> {
+        impl #service_ident<transport::Channel> {
             /// Attempt to create a new client by connecting to a given endpoint.
-            pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+            pub async fn connect<D>(dst: D) -> Result<Self, transport::Error>
             where
-                D: TryInto<tonic::transport::Endpoint>,
+                D: TryInto<transport::Endpoint>,
                 D::Error: Into<StdError>,
             {
-                let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+                let conn = transport::Endpoint::new(dst)?.connect().await?;
                 Ok(Self::new(conn))
             }
         }
