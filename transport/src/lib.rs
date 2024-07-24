@@ -121,3 +121,9 @@ pub use self::channel::ClientTlsConfig;
 pub use self::server::ServerTlsConfig;
 #[cfg(feature = "tls")]
 pub use self::tls::Identity;
+
+// Things added; taken from other parts of the `tonic` crate that were private.
+
+pub(crate) const GRPC_TIMEOUT_HEADER: &str = "grpc-timeout";
+
+pub(crate) type BoxError = Box<dyn std::error::Error + Send + Sync>;

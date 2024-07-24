@@ -13,7 +13,7 @@ use tracing::trace;
 pub(crate) struct Reconnect<M, Target>
 where
     M: Service<Target>,
-    M::Error: Into<Error>,
+    M::Error: Into<BoxError>,
 {
     mk_service: M,
     state: State<M::Future, M::Response>,
@@ -33,7 +33,7 @@ enum State<F, S> {
 impl<M, Target> Reconnect<M, Target>
 where
     M: Service<Target>,
-    M::Error: Into<Error>,
+    M::Error: Into<BoxError>,
 {
     pub(crate) fn new(mk_service: M, target: Target, is_lazy: bool) -> Self {
         Reconnect {
@@ -52,12 +52,12 @@ where
     M: Service<Target, Response = S>,
     S: Service<Request>,
     M::Future: Unpin,
-    Error: From<M::Error> + From<S::Error>,
+    BoxError: From<M::Error> + From<S::Error>,
     Target: Clone,
     <M as tower_service::Service<Target>>::Error: Into<crate::BoxError>,
 {
     type Response = S::Response;
-    type Error = Error;
+    type Error = BoxError;
     type Future = ResponseFuture<S::Future>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
@@ -160,7 +160,7 @@ where
     M::Future: fmt::Debug,
     M::Response: fmt::Debug,
     Target: fmt::Debug,
-    <M as tower_service::Service<Target>>::Error: Into<Error>,
+    <M as tower_service::Service<Target>>::Error: Into<BoxError>,
 {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt.debug_struct("Reconnect")
@@ -203,9 +203,9 @@ impl<F> ResponseFuture<F> {
 impl<F, T, E> Future for ResponseFuture<F>
 where
     F: Future<Output = Result<T, E>>,
-    E: Into<Error>,
+    E: Into<BoxError>,
 {
-    type Output = Result<T, Error>;
+    type Output = Result<T, BoxError>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         //self.project().inner.poll(cx).map_err(Into::into)

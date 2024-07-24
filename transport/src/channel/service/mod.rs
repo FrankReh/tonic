@@ -17,7 +17,10 @@ mod io;
 use self::io::BoxedIo;
 
 mod connector;
-pub(crate) use self::connector::{ConnectError, Connector};
+pub(crate) use self::connector::Connector;
+// TODO decide on importance
+#[allow(unused_imports)]
+pub(crate) use self::connector::ConnectError;
 
 mod executor;
 pub(super) use self::executor::{Executor, SharedExec};
